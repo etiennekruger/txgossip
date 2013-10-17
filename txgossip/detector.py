@@ -39,13 +39,15 @@ class FailureDetector(object):
         self.intervals.append(i)
         if len(self.intervals) > 1000:
             self.intervals.pop(0)
-
-    def phi(self, current_time):
+    
+    def failed(self, current_time, phi=8):
         if self.last_time is None:
-            return 0
+            return True
         current_interval = current_time - self.last_time
         exp = -1 * current_interval / self.interval_mean()
-        return -1 * (math.log(pow(math.e, exp)) / math.log(10))
+        if pow(math.e, exp) < 10**(-phi):
+            return True
+        return False
 
     def interval_mean(self):
         return sum(self.intervals) / float(len(self.intervals))

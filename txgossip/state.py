@@ -108,8 +108,7 @@ class PeerState(object):
         return deltas
 
     def check_suspected(self):
-        phi = self.detector.phi(self.clock.seconds())
-        if phi > self.PHI or phi == 0:
+        if self.detector.failed(self.clock.seconds(), self.PHI):
             self.mark_dead()
             return True
         else:
